@@ -1,0 +1,68 @@
+#usda 1.0
+(
+    defaultPrim = "pCube1"
+    endTimeCode = 1
+    startTimeCode = 1
+    upAxis = "Y"
+)
+
+def Mesh "fourSquares" (
+    kind = "component"
+)
+{
+    rel material:binding = </UdimTest>
+    uniform bool doubleSided = 1
+    float3[] extent = [(-0.5, 0, -0.5), (0.5, 0, 0.5)]
+    int[] faceVertexCounts = [4, 4, 4, 4]
+    int[] faceVertexIndices = [0, 1, 4, 3, 1, 2, 5, 4, 3, 4, 7, 6, 4, 5, 8, 7]
+    normal3f[] normals = [(0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0), (0, 1, 0)] (
+        interpolation = "faceVarying"
+    )
+    point3f[] points = [(-0.5, 0, 0.5), (0, 0, 0.5), (0.5, 0, 0.5), (-0.5, 0, 0), (0, 0, 0), (0.5, 0, 0), (-0.5, 0, -0.5), (0, 0, -0.5), (0.5, 0, -0.5)]
+    float2[] primvars:st = [(0.0, 0.0), (1.0, 0.0), (1.0, 1.0), (0.0, 1.0), (2.0, 0.0), (2.0, 1.0), (1.0, 2.0), (0.0, 2.0), (2.0, 2.0)] (
+        interpolation = "vertex"
+    )
+    int[] primvars:st:indices = [0, 1, 4, 3, 2, 5, 7, 6, 8]
+    double3 xformOp:translate = (2, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+}
+
+def Material "UdimTest" {
+    token outputs:surface.connect = </UdimTest/TestShader.outputs:surface>
+    token outputs:displacement.connect = </UdimTest/TestShader.outputs:displacement>
+
+    def Shader "TestShader" {
+       uniform token info:id = "UsdPreviewSurface"
+
+       color3f inputs:emissiveColor.connect = </UdimTest/ColorTex.outputs:rgb>
+       float inputs:roughness = 1.0
+       float inputs:clearcoat = 0.0
+       float inputs:clearcoatRoughness = 0.0
+       color3f inputs:specularColor = (0.0, 0.0, 0.0)
+       float inputs:metallic = 0.0
+       float inputs:occlusion = 1.0
+       float inputs:ior = 0.0
+       float3 inputs:normal = (1.0, 1.0, 1.0)
+       float inputs:opacity = 1.0
+       color3f inputs:diffuseColor = (0.0, 0.0, 0.0)
+       float inputs:displacement = 0.0
+       int inputs:useSpecularWorkflow = 1
+
+       token outputs:surface
+       token outputs:displacement
+    }
+
+    def Shader "UvPrimvar" {
+        uniform token info:id = "UsdPrimvarReader_float2"
+        token inputs:varname = "st"
+        float2 outputs:result
+    }
+
+     def Shader "ColorTex" {
+        uniform token info:id = "UsdUVTexture"
+        asset inputs:file = @./textures/rgbcym_udim.<UDIM>.tx@
+        float2 inputs:st.connect = </UdimTest/UvPrimvar.outputs:result>
+        color3f outputs:rgb
+        custom uniform float textureMemory = 100000000 
+    }
+}

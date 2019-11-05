@@ -1,0 +1,178 @@
+#usda 1.0
+(
+    defaultPrim = "cube_blinn_texture"
+    upAxis = "Y"
+)
+
+def Mesh "cube_blinn_texture" (
+    kind = "component"
+)
+{
+    uniform bool doubleSided = 1
+    float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+    int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+    int[] faceVertexIndices = [0, 1, 3, 2, 2, 3, 5, 4, 4, 5, 7, 6, 6, 7, 1, 0, 1, 7, 5, 3, 6, 0, 2, 4]
+    rel material:binding = </cube_blinn_texture/Looks/blinn_textureSG>
+    point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, 0.5, -0.5), (0.5, 0.5, -0.5), (-0.5, -0.5, -0.5), (0.5, -0.5, -0.5)]
+    color3f[] primvars:displayColor = [(0, 0, 0)] (
+        customData = {
+            dictionary Maya = {
+                bool generated = 1
+            }
+        }
+    )
+    float2[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+        interpolation = "faceVarying"
+    )
+    int[] primvars:st:indices = [0, 1, 2, 3, 0, 1, 2, 3, 2, 3, 0, 1, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3]
+    double3 xformOp:translate = (1.8001793221431481, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+
+    def Scope "Looks"
+    {
+        def Material "blinn_textureSG"
+        {
+            token outputs:glslfx:surface.connect = </cube_blinn_texture/Looks/blinn_textureSG/blinn_texture.outputs:out>
+
+            def Shader "place2dTexture1"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "file1"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @./textures/rgbcym_udim.1001.png@
+                float2 inputs:st = (0, 0)
+                float2 inputs:st.connect = </cube_blinn_texture/Looks/blinn_textureSG/place2dTexture1.outputs:result>
+                float inputs:textureMemory = 100000000
+                float3 outputs:rgb
+            }
+
+            def Shader "blinn_texture"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 0.01
+                float3 inputs:diffuseColor = (0, 0, 0)
+                float3 inputs:diffuseColor.connect = </cube_blinn_texture/Looks/blinn_textureSG/file1.outputs:rgb>
+                float inputs:displacement = 0
+                float3 inputs:emissiveColor = (0, 0, 0)
+                float inputs:ior = 1.5
+                float inputs:metallic = 0
+                float3 inputs:normal = (0, 0, 1)
+                float inputs:occlusion = 1
+                float inputs:opacity = 1
+                float inputs:roughness = 0.3
+                float3 inputs:specularColor = (0.5, 0.5, 0.5)
+                int inputs:useSpecularWorkflow = 1
+                token outputs:out
+            }
+        }
+    }
+}
+
+def Mesh "cube_blinn_redgreen" (
+    kind = "component"
+)
+{
+    uniform bool doubleSided = 1
+    float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+    int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+    int[] faceVertexIndices = [0, 1, 3, 2, 2, 3, 5, 4, 4, 5, 7, 6, 6, 7, 1, 0, 1, 7, 5, 3, 6, 0, 2, 4]
+    rel material:binding = </cube_blinn_redgreen/Looks/blinn_redgreenSG>
+    point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, 0.5, -0.5), (0.5, 0.5, -0.5), (-0.5, -0.5, -0.5), (0.5, -0.5, -0.5)]
+    color3f[] primvars:displayColor = [(0.6120656, 0.0038618734, 0.0038618734)] (
+        customData = {
+            dictionary Maya = {
+                bool generated = 1
+            }
+        }
+    )
+    float2[] primvars:st = [(0.33, 0), (0.66333336, 0), (0.66333336, 0.25), (0.33, 0.25), (0.66333336, 0.5), (0.33, 0.5), (0.66333336, 0.75), (0.33, 0.75), (0.66333336, 1), (0.33, 1), (1, 0), (1, 0.25), (0, 0), (0, 0.25)] (
+        interpolation = "faceVarying"
+    )
+    int[] primvars:st:indices = [0, 1, 2, 3, 3, 2, 4, 5, 5, 4, 6, 7, 7, 6, 8, 9, 1, 10, 11, 2, 12, 0, 3, 13]
+
+    def Scope "Looks"
+    {
+        def Material "blinn_redgreenSG"
+        {
+            token outputs:glslfx:surface.connect = </cube_blinn_redgreen/Looks/blinn_redgreenSG/blinn_redgreen.outputs:out>
+
+            def Shader "blinn_redgreen"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 0.01
+                float3 inputs:diffuseColor = (1, 0.1, 0.1)
+                float inputs:displacement = 0
+                float3 inputs:emissiveColor = (0, 0, 0)
+                float inputs:ior = 1.5
+                float inputs:metallic = 0
+                float3 inputs:normal = (0, 0, 1)
+                float inputs:occlusion = 1
+                float inputs:opacity = 1
+                float inputs:roughness = 0.3
+                float3 inputs:specularColor = (0.1, 1, 0.1)
+                int inputs:useSpecularWorkflow = 1
+                token outputs:out
+            }
+        }
+    }
+}
+
+def Mesh "cube_lambert_blue" (
+    kind = "component"
+)
+{
+    uniform bool doubleSided = 1
+    float3[] extent = [(-0.5, -0.5, -0.5), (0.5, 0.5, 0.5)]
+    int[] faceVertexCounts = [4, 4, 4, 4, 4, 4]
+    int[] faceVertexIndices = [0, 1, 3, 2, 2, 3, 5, 4, 4, 5, 7, 6, 6, 7, 1, 0, 1, 7, 5, 3, 6, 0, 2, 4]
+    rel material:binding = </cube_lambert_blue/Looks/lambert_blueSG>
+    point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5), (-0.5, 0.5, -0.5), (0.5, 0.5, -0.5), (-0.5, -0.5, -0.5), (0.5, -0.5, -0.5)]
+    color3f[] primvars:displayColor = [(0.0010159458, 0.0018539547, 0.13320851)] (
+        customData = {
+            dictionary Maya = {
+                bool generated = 1
+            }
+        }
+    )
+    float2[] primvars:st = [(0.33, 0), (0.66333336, 0), (0.66333336, 0.25), (0.33, 0.25), (0.66333336, 0.5), (0.33, 0.5), (0.66333336, 0.75), (0.33, 0.75), (0.66333336, 1), (0.33, 1), (1, 0), (1, 0.25), (0, 0), (0, 0.25)] (
+        interpolation = "faceVarying"
+    )
+    int[] primvars:st:indices = [0, 1, 2, 3, 3, 2, 4, 5, 5, 4, 6, 7, 7, 6, 8, 9, 1, 10, 11, 2, 12, 0, 3, 13]
+    double3 xformOp:translate = (-1.5784350667882945, 0, 0)
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+
+    def Scope "Looks"
+    {
+        def Material "lambert_blueSG"
+        {
+            token outputs:glslfx:surface.connect = </cube_lambert_blue/Looks/lambert_blueSG/lambert_blue.outputs:out>
+
+            def Shader "lambert_blue"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 0.01
+                float3 inputs:diffuseColor = (0.054500014, 0.071636915, 0.5)
+                float inputs:displacement = 0
+                float3 inputs:emissiveColor = (0, 0, 0)
+                float inputs:ior = 1.5
+                float inputs:metallic = 0
+                float3 inputs:normal = (0, 0, 1)
+                float inputs:occlusion = 1
+                float inputs:opacity = 1
+                float inputs:roughness = 1
+                float3 inputs:specularColor = (1, 1, 1)
+                int inputs:useSpecularWorkflow = 0
+                token outputs:out
+            }
+        }
+    }
+}
+

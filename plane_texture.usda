@@ -1,0 +1,90 @@
+#usda 1.0
+(
+    defaultPrim = "plane"
+    metersPerUnit = 0.01
+    upAxis = "Y"
+)
+
+def Mesh "plane" (
+    kind = "component"
+)
+{
+    uniform bool doubleSided = 1
+    float3[] extent = [(-0.5, -0.5, 0.5), (0.5, 0.5, 0.5)]
+    int[] faceVertexCounts = [4]
+    int[] faceVertexIndices = [0, 1, 3, 2]
+    rel material:binding = </plane/Looks/lambert2SG>
+    normal3f[] normals = [(0, 0, 1), (0, 0, 1), (0, 0, 1), (0, 0, 1)] (
+        interpolation = "faceVarying"
+    )
+    point3f[] points = [(-0.5, -0.5, 0.5), (0.5, -0.5, 0.5), (-0.5, 0.5, 0.5), (0.5, 0.5, 0.5)]
+    float2[] primvars:st = [(0, 0), (1, 0), (1, 1), (0, 1)] (
+        interpolation = "vertex"
+    )
+    int[] primvars:st:indices = [0, 1, 3, 2]
+    uniform token subdivisionScheme = "none"
+
+    def Scope "Looks"
+    {
+        def Material "lambert2SG"
+        {
+            token outputs:glslfx:surface.connect = </plane/Looks/lambert2SG/lambert2.outputs:out>
+            token outputs:surface.connect = </plane/Looks/lambert2SG/lambert2.outputs:out>
+
+            def Shader "place2dTexture1"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                token inputs:varname = "st"
+                float2 outputs:result
+            }
+
+            def Shader "file1"
+            {
+                uniform token info:id = "UsdUVTexture"
+                asset inputs:file = @./textures/rgbcym_udim.1001.png@
+                float2 inputs:st = (0, 0)
+                float2 inputs:st.connect = </plane/Looks/lambert2SG/place2dTexture1.outputs:result>
+                float inputs:textureMemory = 100000000
+                token inputs:wrapS = "repeat"
+                token inputs:wrapT = "repeat"
+                float3 outputs:rgb
+            }
+
+            def Shader "lambert2"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                float inputs:clearcoat = 0
+                float inputs:clearcoatRoughness = 0.01
+                float3 inputs:diffuseColor = (0, 0, 0)
+                float3 inputs:diffuseColor.connect = </plane/Looks/lambert2SG/file1.outputs:rgb>
+                float inputs:displacement = 0
+                float3 inputs:emissiveColor = (0, 0, 0)
+                float inputs:ior = 1.5
+                float inputs:metallic = 0
+                float3 inputs:normal = (0, 0, 1)
+                float inputs:occlusion = 1
+                float inputs:opacity = 1
+                float inputs:roughness = 1
+                float3 inputs:specularColor = (1, 1, 1)
+                int inputs:useSpecularWorkflow = 0
+                token outputs:out
+            }
+        }
+    }
+}
+
+def Camera "camera1" (
+    kind = "assembly"
+)
+{
+    float2 clippingRange = (0.1, 10000)
+    float focalLength = 35
+    float focusDistance = 5
+    float fStop = 5.6
+    float horizontalAperture = 35.999928
+    float verticalAperture = 23.999952
+    float3 xformOp:rotateXYZ = (-21.338352, -759, 1.0231523e-15)
+    double3 xformOp:translate = (-3.0403975065340165, 1.8873480590772753, 3.7545782355604054)
+    uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateXYZ"]
+}
+
