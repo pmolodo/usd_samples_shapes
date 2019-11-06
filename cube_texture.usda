@@ -47,7 +47,7 @@ def Mesh "pCube1" (
             def Shader "file1"
             {
                 uniform token info:id = "UsdUVTexture"
-                asset inputs:file = @./textures/rgbcym_udim.1001.pNg@
+                asset inputs:file = @./textures/rgbcym_udim.1001.png@
                 texCoord2f inputs:st = (0, 0)
                 texCoord2f inputs:st.connect = </pCube1/Looks/lambert2SG/place2dTexture1.outputs:result>
                 float inputs:textureMemory = 100000000
