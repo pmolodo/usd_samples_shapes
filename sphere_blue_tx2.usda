@@ -1,0 +1,16 @@
+#usda 1.0
+(
+    defaultPrim = "iSphere1"
+    endTimeCode = 1
+    startTimeCode = 1
+    upAxis = "Y"
+)
+
+def Sphere "iSphere1" (
+    kind = "component"
+)
+{
+    uniform token[] xformOpOrder = ["xformOp:translate"]
+    double3 xformOp:translate = (2, 0, 0)
+    color3f[] primvars:displayColor = [(0.21763764, 0.21763764, 0.81763764)]
+}
